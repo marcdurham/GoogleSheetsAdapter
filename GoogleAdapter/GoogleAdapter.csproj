@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>82d3c234-64ba-4217-99c9-1cdcb8fa0e7e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Google.Apis" Version="1.55.0" />
+    <PackageReference Include="Google.Apis.Sheets.v4" Version="1.55.0.2371" />
+    <PackageReference Include="Google.Apis.Storage.v1" Version="1.55.0.2482" />
+    <PackageReference Include="Google.Cloud.Language.V1" Version="2.3.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="3.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

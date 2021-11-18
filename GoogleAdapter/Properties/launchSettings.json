@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GoogleAdapter": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Downloads\\client_secret_130510505279-r7r6hqb21r30ue577mgtsire53hc96o5.apps.googleusercontent.com.json\" 1MG-DXL_L7NGPGb5-DDlLvj7naQDV5cYWJx24FhdllDA \"CLM Send Emails!B1:D10\""
+    }
+  }
+}

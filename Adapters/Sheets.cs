@@ -3,10 +3,11 @@ using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Util.Store;
+using System.Text;
 
-namespace GoogleAdapter
+namespace GoogleAdapter.Adapters
 {
-    internal class Sheets
+    public class Sheets
     {
         // Some APIs, like Storage, accept a credential in their Create()
         // method.
@@ -16,9 +17,16 @@ namespace GoogleAdapter
 
         readonly SheetsService _service;
 
-        public Sheets(string jsonPath)
+        public Sheets(string json, bool isServiceAccount = false)
         {
-            _service = GetSheetService(jsonPath);
+            if (isServiceAccount)
+            {
+                _service = GetSheetServiceService(json);
+            }
+            else
+            {
+                _service = GetSheetService(json, U);
+            }
         }
 
         public void WriteOneCell(string documentId, string range, object value)
@@ -48,9 +56,9 @@ namespace GoogleAdapter
             return response.Values;
         }
 
-        static SheetsService GetSheetService(string jsonPath)
+        static SheetsService GetSheetService(string jsonPath, ICredential credential)
         {
-            UserCredential credential = Credentials(jsonPath);
+            //UserCredential credential = Credentials(jsonPath);
 
             // Create Google Sheets API service.
             SheetsService service = new(new BaseClientService.Initializer()
@@ -62,22 +70,53 @@ namespace GoogleAdapter
             return service;
         }
 
-        static UserCredential Credentials(string jsonPath)
+        static SheetsService GetSheetServiceService(string json)
+        {
+            GoogleCredential credential = ServiceCredentials(json);
+
+            // Create Google Sheets API service.
+            SheetsService service = new(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
+
+            return service;
+        }
+        static UserCredential Credentials(string json)
         {
             UserCredential credential;
-
-            using (FileStream stream = new(jsonPath, FileMode.Open, FileAccess.Read))
+           
+            byte[] byteArray = Encoding.ASCII.GetBytes(json);
+            using (MemoryStream stream = new MemoryStream(byteArray))
             {
                 // The file token.json stores the user's access and refresh tokens, and is created
                 // automatically when the authorization flow completes for the first time.
+
+                string path = Path.Combine(Path.GetTempPath(), CredPath);
+                
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.FromStream(stream).Secrets,
                     Scopes,
                     "user",
                     CancellationToken.None,
-                    new FileDataStore(CredPath, true)).Result;
+                    new FileDataStore(path, true)).Result;
                 
                 Console.WriteLine("Credential file saved to: " + CredPath);
+            }
+
+            return credential;
+        }
+
+        static GoogleCredential ServiceCredentials(string json)
+        {
+            GoogleCredential credential;
+
+            byte[] byteArray = Encoding.ASCII.GetBytes(json);
+            using (MemoryStream stream = new MemoryStream(byteArray))
+            {
+                var serviceCred = ServiceAccountCredential.FromServiceAccountData(stream);
+                credential = GoogleCredential.FromServiceAccountCredential(serviceCred);
             }
 
             return credential;

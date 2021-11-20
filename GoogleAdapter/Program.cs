@@ -1,14 +1,17 @@
 ﻿
 
 // See https://aka.ms/new-console-template for more information
-using GoogleAdapter;
+using GoogleAdapter.Adapters;
 
 Console.WriteLine("Reading and writing to a Google spreadsheet...");
 string secretsJsonPath = args[0];
 string documentId = args[1];
 string range = args[2];
 
-var tester = new Sheets(secretsJsonPath);
+
+string json = File.ReadAllText(secretsJsonPath);
+
+var tester = new Sheets(json, isServiceAccount: true);
 
 IList<IList<object>> linesToEdit = tester.Read(documentId: documentId, range: range);
 
@@ -17,7 +20,7 @@ IList<IList<object>> linesToEdit = tester.Read(documentId: documentId, range: ra
 //    linesToEdit[r][2] = "2/3/1111";
 //}
 
-var oValues = new[] { new[] { (object)"2/4/1111" } };
+var oValues = new[] { new[] { (object)"4/4/4444" } };
 
 tester.Write(
     documentId: documentId,

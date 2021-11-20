@@ -21,11 +21,11 @@ namespace GoogleAdapter.Adapters
         {
             if (isServiceAccount)
             {
-                _service = GetSheetServiceService(json);
+                _service = GetSheetService(ServiceCredentials(json));
             }
             else
             {
-                _service = GetSheetService(json, U);
+                _service = GetSheetService(UserCredentials(json));
             }
         }
 
@@ -56,7 +56,7 @@ namespace GoogleAdapter.Adapters
             return response.Values;
         }
 
-        static SheetsService GetSheetService(string jsonPath, ICredential credential)
+        static SheetsService GetSheetService(ICredential credential)
         {
             //UserCredential credential = Credentials(jsonPath);
 
@@ -83,7 +83,7 @@ namespace GoogleAdapter.Adapters
 
             return service;
         }
-        static UserCredential Credentials(string json)
+        static UserCredential UserCredentials(string json)
         {
             UserCredential credential;
            

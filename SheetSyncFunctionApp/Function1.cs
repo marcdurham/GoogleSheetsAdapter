@@ -20,18 +20,20 @@ namespace SheetSyncFunctionApp
             string secretsJson = Environment.GetEnvironmentVariable("ServiceSecretsJson", EnvironmentVariableTarget.Process);
             string documentId = Environment.GetEnvironmentVariable("DocumentId", EnvironmentVariableTarget.Process);
             string range = Environment.GetEnvironmentVariable("Range", EnvironmentVariableTarget.Process);
+            string targetDocumentId = Environment.GetEnvironmentVariable("TargetDocumentId", EnvironmentVariableTarget.Process);
+            string targetRange = Environment.GetEnvironmentVariable("TargetRange", EnvironmentVariableTarget.Process);
 
             log.LogInformation($"secretsJsonPath:{secretsJson.Length} documentId:{documentId} range:{range}");
 
             var sheets = new Sheets(secretsJson, isServiceAccount: true);
 
-            //IList<IList<object>> linesToEdit = tester.Read(documentId: documentId, range: range);
+            IList<IList<object>> values = sheets.Read(documentId: documentId, range: range);
 
-            var values = new[] { new[] { (object)DateTime.Now.ToLongTimeString(), (object)"Azure Function" } };
+            //var values = new[] { new[] { (object)DateTime.Now.ToLongTimeString(), (object)"Azure Function" } };
 
             sheets.Write(
-                documentId: documentId,
-                range: range,
+                documentId: targetDocumentId,
+                range: targetRange,
                 values: values);
 
             //IList<IList<object>> lines = tester.Read(documentId: documentId, range: range);
